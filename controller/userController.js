@@ -35,9 +35,10 @@ module.exports = {
                 const td = Date.now();
                 const today = new Date(td);
                 const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
+                const startDate = moment.tz(goal[0].createdAt, 'Asia/Seoul').format('DD');
                 if (goal[0]) {
-                    const lastGoalDate =  todayDate - goal[0].createdAt.getDate()+ 1;
-                    console.log(lastGoalDate, goal[0].createdAt, todayDate);
+                    const lastGoalDate =  todayDate - startDate+ 1;
+                    console.log(lastGoalDate, startDate, todayDate);
                     if (lastGoalDate <= 7){isGoal = true}
                 }
                 
