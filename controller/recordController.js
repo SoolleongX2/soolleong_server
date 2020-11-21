@@ -1,36 +1,65 @@
-const {Record, Goal, sequelize} = require('../models');
+const {Record, Goal} = require('../models');
 const util = require('../modules/util');
-const sc = require('../modules/statusCode')
+const sc = require('../modules/statusCode');
 const rm = require('../modules/responseMessage');
 const service = require('../service/recordService');
-const Date = require('date-utils');
+const date = require('date-utils');
+const { response } = require('express');
 
 module.exports = {
     getLeftDrinks: async (req, res) => {
+        try {
+            const goal = await service.getGoal();
+            // 이번주 레코드 합 가져오기
+            const {bottle, glass} = await service.getShotLeft(goal);
+            const day = await service.todayToDay();
 
+            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_SUCCESS, {bottle, glass, day}))
+        } catch (err) {
+            console.error(err);
+        }
     },
     postTodayDrinks : async (req, res) => {
-        const {bottle, glass} = req.body;
+        try {
+            const {bottle, glass} = req.body;
+    
+            // 최근 목표 가져오기
+            // const startDay = await Goal.max('createdAt', { where : {UserId : 1}});
+            const goal = await service.getGoal();
+            const td = Date.now();
+            const today = new Date(td);
+            const day = goal.createdAt.getDate() - today.getDate() + 1; 
+            
+            if(!bottle || !glass) {
+                res.status(sc.BAD_REQUEST).send(util.fail(sc.BAD_REQUEST, rm.NULL_VALUE));
+            }
+            const alcoholCount = bottle * 7 + glass;
+            console.log(day, alcoholCount)
 
-        // 최근 목표 가져오기
-        const goal = Goal.findOne({
-            order : [
-                sequelize.fn('max', sequelize.col('createdAt'))
-            ]
-        })
-        const td = Date.now();
-        const today = new Date(td);
-        const startDate = goal.createdAt;
-        const day = startDate.getDate() - today.getDate();
-        
-        if(!bottle || !glass) {
-            res.status(sc.BAD_REQUEST).send(util.fail(sc.BAD_REQUEST, rm.NULL_VALUE));
+            const record = await Record.create({
+                day,
+                alcoholCount,
+                userId : 1,
+                GoalId : goal.id,
+            })
+
+            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_SUCCESS, record))
+            
+
+        } catch (err) {
+            console.error(err);
         }
-        const alcoholCount = bottle * 7 + glass;
-        console.log(day, alcoholCount);
 
     },
     getWeekDrinks : async (req, res) => {
+        const day = await service.todayToDay();
+        const goal = await service.getGoal();
+        const {shotSum} = await service.getShotLeft(goal);
+        const bottle = Math.floor(shotSum / 7);
+        const glass = shotSum % 7;
 
+        const records = await service.getRecords(goal);
+        
+        res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {day,bottle, glass, records }))
     }
 }
