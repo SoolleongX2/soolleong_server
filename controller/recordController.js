@@ -38,7 +38,8 @@ module.exports = {
             const td = Date.now();
             const today = new Date(td);
             const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
-            const day = todayDate - goal.createdAt.getDate() + 1; 
+            const startDate = moment.tz(goal.createdAt, 'Asia/Seoul').format('DD');
+            const day = todayDate - startDate + 1; 
             
             
             const alcoholCount = bottle * 7 + glass;
