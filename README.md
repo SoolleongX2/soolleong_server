@@ -1,9 +1,9 @@
-# 서비스 이름
-서비스 한줄 소개
+# 술렁
+이번엔 진짜 금주! 나의 7일 음주 습관 트래커
 
 ## API 명세서
 
-[api 링크](https://github.com/ON-SOPT-SERVER/ON-SOPT-SERVER-SEMINAR/wiki)
+[api 링크](https://github.com/SoolleongX2/soolleong_server/wiki)
 
 ## sequelize Model
 
