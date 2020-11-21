@@ -22,8 +22,8 @@ db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' });
 ```
 
 ## ERD
+![image](https://user-images.githubusercontent.com/60654009/99878550-9214bf00-2c49-11eb-8b4d-0e80b11b6486.png)
 
-![ERD](https://github.com/ON-SOPT-SERVER/ON-SOPT-SERVER-SEMINAR/blob/master/5th-seminar/public/images/ERD.png)
 
 
 
