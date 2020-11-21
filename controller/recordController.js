@@ -9,26 +9,9 @@ const { response } = require('express');
 module.exports = {
     getLeftDrinks: async (req, res) => {
         try {
-            // 이번주 모든 레코드 가져오기
-            const goal = await Goal.findOne({
-                limit : 1,
-                order : [['createdAt', 'DESC']],
-                where : { UserId : 1},
-            });
-            console.log(goal);
-            const records = await Record.findAll({
-                where : { GoalId : goal.id },
-            })
-            let shotSum = 0
-            records.filter(m => {shotSum += m.alcoholCount});
-            
-            console.log(shotSum);
-            let shotleft = goal.alcoholCount - shotSum;
-            if (shotleft < 0) {
-                shotleft = 0;
-            }
-            const bottle = Math.floor(shotleft / 7);
-            const glass = shotleft % 7;
+            const goal = await service.getGoal();
+            // 이번주 레코드 합 가져오기
+            const {bottle, glass} = await service.getShotLeft(goal);
             const day = await service.todayToDay();
 
             res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_SUCCESS, {bottle, glass, day}))
@@ -42,11 +25,7 @@ module.exports = {
     
             // 최근 목표 가져오기
             // const startDay = await Goal.max('createdAt', { where : {UserId : 1}});
-            const goal = await Goal.findOne({
-                limit : 1,
-                order : [['createdAt', 'DESC']],
-                where : { UserId : 1},
-            });
+            const goal = await service.getGoal();
             const td = Date.now();
             const today = new Date(td);
             const day = goal.createdAt.getDate() - today.getDate() + 1; 
@@ -65,6 +44,7 @@ module.exports = {
             })
 
             res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_SUCCESS, record))
+            
 
         } catch (err) {
             console.error(err);
@@ -72,6 +52,14 @@ module.exports = {
 
     },
     getWeekDrinks : async (req, res) => {
+        const day = await service.todayToDay();
+        const goal = await service.getGoal();
+        const {shotSum} = await service.getShotLeft(goal);
+        const bottle = Math.floor(shotSum / 7);
+        const glass = shotSum % 7;
 
+        const records = await service.getRecords(goal);
+        
+        res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {day,bottle, glass, records }))
     }
 }
