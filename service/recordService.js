@@ -1,4 +1,5 @@
 const {Record, Goal} = require('../models');
+const moment = require('moment');
 
 module.exports = {
     getGoal : async (UserId) => {
@@ -14,16 +15,19 @@ module.exports = {
             console.error(err);
         }
     },
-    todayToDay : async () => {
+    todayToDay : async (UserId) => {
         try {
             const goal = await Goal.findOne({
                 limit : 1,
                 order : [['createdAt', 'DESC']],
-                where : { UserId : 1},
+                where : { UserId },
             });
+            console.log(goal.createdAt);
+            console.log(goal.createdAt.getDate());
             const td = Date.now();
             const today = new Date(td);
-            const day = goal.createdAt.getDate() - today.getDate() + 1; 
+            const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
+            const day = todayDate -goal.createdAt.getDate()+ 1; 
             return day;
         } catch (err) {
             console.error(err);
@@ -54,11 +58,11 @@ module.exports = {
             })
             records = records.map(m => {
                 return {
-                month: m.createdAt.getMonth() + 1,
-                day : m.createdAt.getDate(),
-                bottle: Math.floor(m.alcoholCount/7),
-                glass : m.alcoholCount%7,
-                dayCount : m.day,
+                    month: m.createdAt.getMonth() + 1,
+                    day : m.createdAt.getDate(),
+                    bottle: Math.floor(m.alcoholCount/7),
+                    glass : m.alcoholCount%7,
+                    dayCount : m.day,
             }})
             return records
         } catch (err) {
