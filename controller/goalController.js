@@ -26,7 +26,8 @@ module.exports = {
             alcoholCount = bottle * 7
             const goal = await goalService.createGoal(id, alcoholType, alcoholCount)
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATE_GOAL_SUCCESS, {
-                goal
+                alcoholType: goal.alcoholType,
+                alcoholCount: goal.alcoholCount
             }));
         
         }catch(error){
