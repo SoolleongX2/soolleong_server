@@ -23,17 +23,20 @@ module.exports = {
 
         try {
             const alreadyUser = await userService.checkIfExist(uuid);
-            const {
-                token,
-                refreshToken
-            } = jwt.sign(alreadyUser);
             if (alreadyUser) {
-                return res.status(statusCode.OK).send(util.send(statusCode.OK, responseMessage.SIGN_IN_SUCCESS), {
+                const {
                     token
-                });
+                } = await jwt.sign(alreadyUser);
+                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
+                    token
+                }));
             } else {
                 const user = await userService.createUser(uuid);
-                return res.status(statusCode.OK).send(util.send(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, {
+                const {
+                    token
+                } = await jwt.sign(user);
+                console.log(`token:${token}`);
+                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, {
                     token, 
                     user
                 }));

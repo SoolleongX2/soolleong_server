@@ -30,6 +30,10 @@ module.exports = {
   NO_EMAIL: '존재하지 않는 이메일 입니다.',
   MISS_MATCH_PW: "비밀번호가 일치하지 않습니다",
 
+  /* 목표(Goal) */
+  CREATE_GOAL_SUCCESS: "목표 생성 성공",
+  CREATE_GOAL_FAIL: "목표 생성 실패",
+
 
 
   /* 서버에러 */

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const {
     secretKey,
     options,
-    refreshOptions
 } = require('../config/secretKey');
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
@@ -10,11 +9,10 @@ const TOKEN_INVALID = -2;
 module.exports = {
     sign: async (user) => {
         const payload = {
-            id: user.id,
+            id: user.UserId,
         };
         const result = {
             token: jwt.sign(payload, secretKey, options),
-            refreshToken: jwt.sign(payload, secretKey, refreshOptions),
         };
         return result;
     },

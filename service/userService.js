@@ -9,7 +9,7 @@ module.exports = {
                 }
             });
             return alreadyUser;
-        } catch(err){
+        } catch(error){
             throw error;
         }
     },
@@ -19,8 +19,8 @@ module.exports = {
                 uuid: uuid,
             });
             return user;
-        }catch(err){
-            throw err;
+        }catch(error){
+            throw error;
         }
-    }
+    },
 };
