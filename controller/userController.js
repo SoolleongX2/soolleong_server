@@ -28,6 +28,7 @@ module.exports = {
                 const {
                     token
                 } = await jwt.sign(alreadyUser);
+                console.log(`token:${token}`);
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
                     token,
                     uuid: alreadyUser.uuid
