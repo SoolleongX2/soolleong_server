@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const recordController = require('../../controller/recordController');
-const auth = require('../../middlewares/authuitils');
+const auth = require('../../middlewares/authUtil');
 
 router.get('/', recordController.getLeftDrinks);
 router.post('/', recordController.postTodayDrinks);
