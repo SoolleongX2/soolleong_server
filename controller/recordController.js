@@ -47,7 +47,7 @@ module.exports = {
                 GoalId : goal.id,
             })
 
-            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_SUCCESS, record))
+            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_SUCCESS))
             
 
         } catch (err) {
