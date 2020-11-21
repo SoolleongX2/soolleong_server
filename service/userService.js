@@ -6,7 +6,7 @@ module.exports = {
             const alreadyUser = await User.findOne({
                 where: {
                     uuid,
-                }
+                },
             });
             return alreadyUser;
         } catch(error){

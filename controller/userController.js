@@ -23,12 +23,14 @@ module.exports = {
 
         try {
             const alreadyUser = await userService.checkIfExist(uuid);
+            console.log(alreadyUser)
             if (alreadyUser) {
                 const {
                     token
                 } = await jwt.sign(alreadyUser);
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
-                    token
+                    token,
+                    uuid: alreadyUser.uuid
                 }));
             } else {
                 const user = await userService.createUser(uuid);
@@ -38,7 +40,7 @@ module.exports = {
                 console.log(`token:${token}`);
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, {
                     token, 
-                    user
+                    uuid: user.uuid
                 }));
             }
         } catch (error) {
