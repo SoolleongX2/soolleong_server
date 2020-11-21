@@ -33,8 +33,10 @@ module.exports = {
   /* 목표(Goal) */
   CREATE_GOAL_SUCCESS: "목표 생성 성공",
   CREATE_GOAL_FAIL: "목표 생성 실패",
-
-
+  
+  /** Record */
+  RECORD_SUCCESS: '오늘의 음주량 기록 완료',
+  RECORD_GET_SUCCESS: '남은 음주량 가져오기 성공',
 
   /* 서버에러 */
   INTERNAL_SERVER_ERROR: "서버 내부 오류",
