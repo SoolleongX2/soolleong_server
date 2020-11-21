@@ -1,14 +1,13 @@
-const {Record, Goal} = require('../models');
+const {Record} = require('../models');
 const util = require('../modules/util');
 const sc = require('../modules/statusCode');
 const rm = require('../modules/responseMessage');
 const service = require('../service/recordService');
-const date = require('date-utils');
-const { response } = require('express');
 
 module.exports = {
     getLeftDrinks: async (req, res) => {
         try {
+            console.log(req.decoded)
             const goal = await service.getGoal();
             // 이번주 레코드 합 가져오기
             const {bottle, glass} = await service.getShotLeft(goal);
@@ -52,14 +51,18 @@ module.exports = {
 
     },
     getWeekDrinks : async (req, res) => {
-        const day = await service.todayToDay();
-        const goal = await service.getGoal();
-        const {shotSum} = await service.getShotLeft(goal);
-        const bottle = Math.floor(shotSum / 7);
-        const glass = shotSum % 7;
-
-        const records = await service.getRecords(goal);
-        
-        res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {day,bottle, glass, records }))
+        try {
+            const day = await service.todayToDay();
+            const goal = await service.getGoal();
+            const {shotSum} = await service.getShotLeft(goal);
+            const bottle = Math.floor(shotSum / 7);
+            const glass = shotSum % 7;
+    
+            const records = await service.getRecords(goal);
+            
+            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {day,bottle, glass, records }))
+        } catch (err) {
+            console.error(err);
+        }
     }
 }

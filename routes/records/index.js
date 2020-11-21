@@ -3,8 +3,8 @@ const router = express.Router();
 const recordController = require('../../controller/recordController');
 const auth = require('../../middlewares/authUtil');
 
-router.get('/', recordController.getLeftDrinks);
-router.post('/', recordController.postTodayDrinks);
-router.get('/week', recordController.getWeekDrinks);
+router.get('/', auth.checkToken , recordController.getLeftDrinks);
+router.post('/', auth.checkToken, recordController.postTodayDrinks);
+router.get('/week', auth.checkToken, recordController.getWeekDrinks);
 
 module.exports = router;
