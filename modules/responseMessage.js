@@ -10,8 +10,12 @@ module.exports = {
   ISSUE_SUCCESS: '새로운 토큰이 생성되었습니다.',
 
   /** Record */
-  RECORD_SUCCESS: '오늘의 음주량 기록 완료',
+  RECORD_SUCCESS: '오늘의 음주량 기록 성공',
+  RECORD_FAIL: '오늘의 음주량 기록 실패',
   RECORD_GET_SUCCESS: '남은 음주량 가져오기 성공',
+  RECORD_GET_FAIL: '남은 음주량 가져오기 실패',
+  RECORD_GET_WEEK_DATA_SUCCESS : '이번주 음주량 가져오기 성공',
+  RECORD_GET_WEEK_DATA_FAIL : '이번주 음주량 가져오기 실패',
 
   /* 서버에러 */
   INTERNAL_SERVER_ERROR: "서버 내부 오류",
