@@ -3,6 +3,7 @@ const util = require('../modules/util');
 const sc = require('../modules/statusCode');
 const rm = require('../modules/responseMessage');
 const service = require('../service/recordService');
+const moment = require('moment');
 
 module.exports = {
     getLeftDrinks: async (req, res) => {
@@ -35,8 +36,9 @@ module.exports = {
                 return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
             }
             const td = Date.now();
-            const today = new Date(td).toLocaleString("ko-KR", {timeZone: "Asia/Seoul"});;
-            const day = today.getDate() - goal.createdAt.getDate() + 1; 
+            const today = new Date(td);
+            const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
+            const day = todayDate - goal.createdAt.getDate() + 1; 
             
             
             const alcoholCount = bottle * 7 + glass;
@@ -68,9 +70,8 @@ module.exports = {
             const glass = shotSum % 7;
     
             const records = await service.getRecords(goal);
-            const goalBottle = Math.floor(goal.alcoholCount / 7);
             
-            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {goalBottle, day,bottle, glass, records }))
+            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {day,bottle, glass, records }))
         } catch (err) {
             console.error(err);
         }
