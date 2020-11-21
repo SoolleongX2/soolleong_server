@@ -37,8 +37,6 @@ module.exports = {
     },
     getGoal: async(req, res) => {
         const { id } = req.decoded;
-        console.log(`id: ${id}`);
-
         try{
             const goal = await goalService.getLatestGoal(id)
             const bottle = Math.floor(goal[0].alcoholCount / 7)
