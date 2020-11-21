@@ -26,6 +26,7 @@ module.exports = {
             const today = new Date(td);
             const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
             const day = todayDate -goal.createdAt.getDate()+ 1; 
+            console.log(todayDate, goal.createdAt.getDate())
             return day;
         } catch (err) {
             console.error(err);
