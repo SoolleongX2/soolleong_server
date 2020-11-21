@@ -1,14 +1,13 @@
 const {Record, Goal} = require('../models');
 
 module.exports = {
-    getGoal : async () => {
+    getGoal : async (UserId) => {
         try{
             const goal = await Goal.findOne({
                 limit : 1,
                 order : [['createdAt', 'DESC']],
-                where : { UserId : 1},
+                where : { UserId},
             });
-            console.log(goal);
             return goal;
 
         } catch (err){
@@ -38,7 +37,6 @@ module.exports = {
             let shotSum = 0
             records.filter(m => {shotSum += m.alcoholCount});
                 
-            console.log(shotSum);
             let shotleft = goal.alcoholCount - shotSum;
             if (shotleft < 0) {
                 shotleft = 0;
@@ -54,7 +52,6 @@ module.exports = {
                 where : { GoalId : goal.id},
                 attributes : ['day', 'createdAt', 'alcoholCount'],
             })
-            console.log(records)
             records = records.map(m => {
                 return {
                 month: m.createdAt.getMonth() + 1,

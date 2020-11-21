@@ -7,8 +7,10 @@ const service = require('../service/recordService');
 module.exports = {
     getLeftDrinks: async (req, res) => {
         try {
-            console.log(req.decoded)
-            const goal = await service.getGoal();
+            const goal = await service.getGoal(req.decoded.id);
+            if (! goal) {
+                return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
+            }
             // 이번주 레코드 합 가져오기
             const {bottle, glass} = await service.getShotLeft(goal);
             const day = await service.todayToDay();
@@ -21,19 +23,22 @@ module.exports = {
     postTodayDrinks : async (req, res) => {
         try {
             const {bottle, glass} = req.body;
+            if((!bottle && bottle != 0 )|| (!glass && glass != 0)) {
+                return res.status(sc.BAD_REQUEST).send(util.fail(sc.BAD_REQUEST, rm.NULL_VALUE));
+            }
     
             // 최근 목표 가져오기
             // const startDay = await Goal.max('createdAt', { where : {UserId : 1}});
-            const goal = await service.getGoal();
+            const goal = await service.getGoal(req.decoded.id);
+            if (! goal) {
+                return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
+            }
             const td = Date.now();
             const today = new Date(td);
             const day = goal.createdAt.getDate() - today.getDate() + 1; 
             
-            if(!bottle || !glass) {
-                res.status(sc.BAD_REQUEST).send(util.fail(sc.BAD_REQUEST, rm.NULL_VALUE));
-            }
+            
             const alcoholCount = bottle * 7 + glass;
-            console.log(day, alcoholCount)
 
             const record = await Record.create({
                 day,
@@ -53,7 +58,10 @@ module.exports = {
     getWeekDrinks : async (req, res) => {
         try {
             const day = await service.todayToDay();
-            const goal = await service.getGoal();
+            const goal = await service.getGoal(req.decoded.id);
+            if (! goal) {
+                return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
+            }
             const {shotSum} = await service.getShotLeft(goal);
             const bottle = Math.floor(shotSum / 7);
             const glass = shotSum % 7;
