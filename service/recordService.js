@@ -22,8 +22,6 @@ module.exports = {
                 order : [['createdAt', 'DESC']],
                 where : { UserId },
             });
-            console.log(goal.createdAt);
-            console.log(goal.createdAt.getDate());
             const td = Date.now();
             const today = new Date(td);
             const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
