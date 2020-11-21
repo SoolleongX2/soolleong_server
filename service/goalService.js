@@ -30,5 +30,15 @@ module.exports = {
         }catch(error){
             throw error;
         }
-    }
+    },
+    checkGoalIfExist: async(id) => {
+        const goal  = Goal.findAll({
+            limit: 1,
+            where: {
+                UserId: id,
+            },
+            attributes:[ "createdAt"],
+            order: [['createdAt', 'DESC']]
+        });
+    },
 };

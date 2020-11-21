@@ -5,8 +5,10 @@ const {
     User
 } = require('../models');
 const {
-    userService
+    userService,
+    goalService
 } = require('../service');
+
 const jwt = require('../modules/jwt');
 
 
@@ -23,25 +25,36 @@ module.exports = {
 
         try {
             const alreadyUser = await userService.checkIfExist(uuid);
-            console.log(alreadyUser)
             if (alreadyUser) {
                 const {
                     token
                 } = await jwt.sign(alreadyUser);
-                console.log(`token:${token}`);
+                const goal = await goalService.checkGoalIfExist(alreadyUser.id)
+                console.log(goal)
+                let isGoal = false
+
+                const td = Date.now();
+                const today = new Date(td);
+                if (goal) {
+                    const lastGoalDate = goal.createAt.getDate() - today.getDate() + 1;
+                    console.log(`lastGoalDate: ${lastGoalDate}`);
+                    if (lastGoalDate <= 7){isGoal = true}
+                }
+
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
                     token,
-                    uuid: alreadyUser.uuid
+                    uuid: alreadyUser.uuid,
+                    isGoal
                 }));
             } else {
                 const user = await userService.createUser(uuid);
                 const {
                     token
                 } = await jwt.sign(user);
-                console.log(`token:${token}`);
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, {
-                    token, 
-                    uuid: user.uuid
+                    token,
+                    uuid: user.uuid,
+                    isGoal: false,
                 }));
             }
         } catch (error) {
