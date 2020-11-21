@@ -8,12 +8,13 @@ module.exports = {
     getLeftDrinks: async (req, res) => {
         try {
             const goal = await service.getGoal(req.decoded.id);
+            console.log(goal.createdAt)
             if (! goal) {
                 return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
             }
             // 이번주 레코드 합 가져오기
             const {bottle, glass} = await service.getShotLeft(goal);
-            const day = await service.todayToDay();
+            const day = await service.todayToDay(req.decoded.id);
 
             res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_SUCCESS, {bottle, glass, day}))
         } catch (err) {
@@ -34,8 +35,8 @@ module.exports = {
                 return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
             }
             const td = Date.now();
-            const today = new Date(td);
-            const day = goal.createdAt.getDate() - today.getDate() + 1; 
+            const today = new Date(td).toLocaleString("ko-KR", {timeZone: "Asia/Seoul"});;
+            const day = today.getDate() - goal.createdAt.getDate() + 1; 
             
             
             const alcoholCount = bottle * 7 + glass;
@@ -57,7 +58,7 @@ module.exports = {
     },
     getWeekDrinks : async (req, res) => {
         try {
-            const day = await service.todayToDay();
+            const day = await service.todayToDay(req.decoded.id);
             const goal = await service.getGoal(req.decoded.id);
             if (! goal) {
                 return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, rm.GET_GOAL_FAIL));
@@ -67,8 +68,9 @@ module.exports = {
             const glass = shotSum % 7;
     
             const records = await service.getRecords(goal);
+            const goalBottle = Math.floor(goal.alcoholCount / 7);
             
-            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {day,bottle, glass, records }))
+            res.status(sc.OK).send(util.success(sc.OK, rm.RECORD_GET_WEEK_DATA_SUCCESS, {goalBottle, day,bottle, glass, records }))
         } catch (err) {
             console.error(err);
         }
