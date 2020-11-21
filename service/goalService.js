@@ -23,22 +23,12 @@ module.exports = {
                 where: {
                     UserId: id,
                 },
-                attributes:['alcoholCount'],
+                attributes:['alcoholCount', 'createdAt'],
                 order: [['createdAt', 'DESC']]
             });
             return goal;
         }catch(error){
             throw error;
         }
-    },
-    checkGoalIfExist: async(id) => {
-        const goal  = Goal.findAll({
-            limit: 1,
-            where: {
-                UserId: id,
-            },
-            attributes:[ "createdAt"],
-            order: [['createdAt', 'DESC']]
-        });
     },
 };
