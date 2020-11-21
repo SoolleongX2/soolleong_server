@@ -9,16 +9,14 @@
 
 ```javascript
 db.User = require('./user')(sequelize, Sequelize);
-db.Post = require('./post')(sequelize, Sequelize);
-db.Like = require('./like')(sequelize, Sequelize);
+db.Goal = require('./goal')(sequelize, Sequelize);
+db.Record = require('./record')(sequelize, Sequelize);
 
-/** 1 : N   User : Post */
-db.User.hasMany(db.Post, { onDelete: 'cascade' });
-db.Post.belongsTo(db.User);
+db.User.hasMany(db.Goal, {onDelete : 'cascade'});
+db.Goal.belongsTo(db.User);
 
-/** N: M    User : Post => Like */
-db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' });
-db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' });
+db.Goal.hasMany(db.Record, {onDelete : 'cascade'});
+db.Record.belongsTo(db.Goal);
 ```
 
 ## ERD
@@ -29,10 +27,10 @@ db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' });
 
 ## 기능 소개
 - 핵심 기능 소개
+### 주간 목표 설정하기
+### 오늘 음주량 기록하기
+### 주간 음주량 레포트 확인
+
 - 구현한 기능과 맡은 엄무 분담을 적어주세요.
-
-[예시]
- 
-- 최영훈 - 로그인, 회원가입
-
-- 남궁권 - 장소검색 API, 장소 조회 API 
+김가영 : 오늘 음주량 기록하기, 주간 음주량 레포트 확인
+김수현 : 주간 목표 설정하기, 주간 음주량 레포트 확인

@@ -10,6 +10,7 @@ sequelize = new Sequelize(config.database, config.username, config.password, con
 }
 db.sequelize = sequelize; 
 db.Sequelize = Sequelize;
+
 db.User = require('./user')(sequelize, Sequelize);
 db.Goal = require('./goal')(sequelize, Sequelize);
 db.Record = require('./record')(sequelize, Sequelize);
