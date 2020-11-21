@@ -1,4 +1,3 @@
-const responseMessage = require('../../4th_seminar/modules/responseMessage')
 const jwt = require('../modules/jwt');
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
