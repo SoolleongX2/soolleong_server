@@ -10,7 +10,7 @@ const {
 } = require('../service');
 
 const jwt = require('../modules/jwt');
-
+const moment = require('moment');
 
 module.exports = {
     signin: async (req, res) => {
@@ -29,18 +29,17 @@ module.exports = {
                 const {
                     token
                 } = await jwt.sign(alreadyUser);
-                const goal = await goalService.checkGoalIfExist(alreadyUser.id)
-                console.log(goal)
+                const goal = await goalService.getLatestGoal(alreadyUser.id)
                 let isGoal = false
 
                 const td = Date.now();
                 const today = new Date(td);
-                if (goal) {
-                    const lastGoalDate = goal.createAt.getDate() - today.getDate() + 1;
-                    console.log(`lastGoalDate: ${lastGoalDate}`);
+                const todayDate = moment.tz(today, 'Asia/Seoul').format('DD');
+                if (goal[0]) {
+                    const lastGoalDate = goal[0].createdAt.getDate() - today.getDate() + 1;
                     if (lastGoalDate <= 7){isGoal = true}
                 }
-
+                
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
                     token,
                     uuid: alreadyUser.uuid,
